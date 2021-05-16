@@ -7,7 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "deployBack": "scp -r ./* nemirich@84.252.137.14:/home/nemirich/backend"
   },
   "keywords": [],
   "author": "Nemirich Ivan",
