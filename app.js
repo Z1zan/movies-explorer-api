@@ -49,8 +49,8 @@ app.post(
   createUser,
 );
 
-app.use('/users', require('./routes/users'));
-// app.use('/movies', auth, require('./routes/movies'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/movies', require('./routes/movies'));
 
 app.use(errorLogger);
 
@@ -60,6 +60,7 @@ app.use('*', (req, res, next) => {
 
 app.use(errors());
 
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
