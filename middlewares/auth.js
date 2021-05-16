@@ -5,7 +5,6 @@ const AuthError = require('../errors/authError');
 const secret = process.env;
 
 function auth(req, res, next) {
-  console.log(req.cookies);
   try {
     req.user = jwt.verify(
       req.cookies.jwt,

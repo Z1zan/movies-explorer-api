@@ -68,7 +68,6 @@ module.exports.createUser = (req, res, next) => {
         .then((user) => res.send({
           _id: user._id,
           email: user.email,
-          avatar: user.avatar,
         }))
         .catch((err) => {
           if (err.name === 'ValidationError') {
@@ -95,35 +94,37 @@ module.exports.login = (req, res, next) => {
   }
 
   User.findOne({ email }).select('+password')
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         throw new AuthError('Неправильная почта или пароль');
       }
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) {
-            throw new AuthError('Неправильная почта или пароль');
-          }
-          const token = jwt.sign(
-            {
-              _id: user._id,
-            },
-            secret.NODE_ENV === 'production'
-              ? secret.JWT_SECRET
-              : 'dev-secret',
-            { expiresIn: '7d' },
-          );
-          return res.cookie(
-            'jwt',
-            token,
-            {
-              maxAge: 3600000,
-              httpOnly: true,
-              sameSite: 'none',
-              secure: true,
-            },
-          ).send({ message: 'Аутентификация прошла успешно!' });
-        });
+      const matched = await bcrypt.compare(password, user.password);
+      if (!matched) {
+        throw new AuthError('Неправильная почта или пароль');
+      }
+      console.log('user.id', user._id);
+      const token = jwt.sign(
+        {
+          _id: user._id,
+        },
+        secret.NODE_ENV === 'production'
+          ? secret.JWT_SECRET
+          : 'dev-secret',
+        {
+          expiresIn: '7d',
+        },
+      );
+      console.log(token);
+      return res.cookie(
+        'jwt',
+        token,
+        {
+          maxAge: 3600000,
+          httpOnly: true,
+          // sameSite: 'none',
+          // secure: true,
+        },
+      ).send({ message: 'Аутентификация прошла успешно!' });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

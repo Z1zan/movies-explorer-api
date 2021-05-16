@@ -54,15 +54,13 @@ module.exports.getMovies = (req, res, next) => {
 module.exports.deleteMovieById = (req, res, next) => {
   const { movieId } = req.params;
   Movie.findById(movieId)
-    .then((movie) => {
+    .then(async (movie) => {
       if (!movie) {
         throw new NotFoundError('Фильм не найден.');
       }
       if (req.user._id === String(movie.owner)) {
-        return Movie.findByIdAndDelete(movieId)
-          .then(() => {
-            res.send({ message: "Фильм успешно удален" });
-          });
+        await Movie.findByIdAndDelete(movieId);
+        res.send({ message: "Фильм успешно удален" });
       }
       throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
     })
