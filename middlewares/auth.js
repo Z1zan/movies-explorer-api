@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 
 const AuthError = require('../errors/authError');
 
-// eslint-disable-next-line no-undef
 const secret = process.env;
 
 function auth(req, res, next) {
