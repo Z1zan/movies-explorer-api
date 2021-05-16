@@ -50,7 +50,7 @@ app.post(
 );
 
 app.use('/users', auth, require('./routes/users'));
-app.use('/movies', require('./routes/movies'));
+app.use('/movies', auth, require('./routes/movies'));
 
 app.use(errorLogger);
 
