@@ -1,7 +1,5 @@
 const Movie = require('../models/movie');
 
-// const AuthError = require('../errors/authError');
-// const ExistingMailError = require('../errors/existingMailError');
 const IncorrectValueError = require('../errors/incorrectValueError');
 const NotFoundError = require('../errors/notFoundError');
 const ForbiddenError = require('../errors/forbiddenError');
@@ -21,7 +19,6 @@ module.exports.createMovie = (req, res, next) => {
     movieId,
   } = req.body;
 
-  console.log(req.user);
   const owner = req.user._id;
 
   Movie.create({
