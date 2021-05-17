@@ -59,8 +59,12 @@ module.exports.deleteMovieById = (req, res, next) => {
         throw new NotFoundError('Фильм не найден.');
       }
       if (req.user._id === String(movie.owner)) {
-        await Movie.findByIdAndDelete(movieId);
-        res.send({ message: "Фильм успешно удален" });
+        try {
+          await Movie.findByIdAndDelete(movieId);
+          res.send({ message: 'Фильм успешно удален' });
+        } catch (err) {
+          throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
+        }
       }
       throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
     })

@@ -10,7 +10,7 @@ const handleErrors = require('./middlewares/handleErrors');
 
 const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(process.env.DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
@@ -35,5 +35,5 @@ app.use(handleErrors);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
-  console.log("PORT is:", PORT);
+  console.log('PORT is:', PORT);
 });

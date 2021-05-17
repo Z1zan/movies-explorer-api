@@ -8,7 +8,7 @@ const {
 } = require('../controllers/users');
 
 router.get('/me', getUserInfo);
-router.post(
+router.patch(
   '/me',
   celebrate({
     body: Joi.object().keys({

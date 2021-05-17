@@ -72,7 +72,7 @@ module.exports.createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             next(new IncorrectValueError('Переданы некорректные данные при создании пользователя.'));
-          } else if (err.name === "MongoError" && err.code === 11000) {
+          } else if (err.name === 'MongoError' && err.code === 11000) {
             next(new ExistingMailError('Данный email уже используется'));
           }
           next(err);
@@ -98,33 +98,35 @@ module.exports.login = (req, res, next) => {
       if (!user) {
         throw new AuthError('Неправильная почта или пароль');
       }
-      const matched = await bcrypt.compare(password, user.password);
-      if (!matched) {
-        throw new AuthError('Неправильная почта или пароль');
+      try {
+        const matched = await bcrypt.compare(password, user.password);
+        if (!matched) {
+          throw new AuthError('Неправильная почта или пароль');
+        }
+        const token = jwt.sign(
+          {
+            _id: user._id,
+          },
+          secret.NODE_ENV === 'production'
+            ? secret.JWT_SECRET
+            : 'dev-secret',
+          {
+            expiresIn: '7d',
+          },
+        );
+        return res.cookie(
+          'jwt',
+          token,
+          {
+            maxAge: 3600000,
+            httpOnly: true,
+            // sameSite: 'none',
+            // secure: true,
+          },
+        ).send({ message: 'Аутентификация прошла успешно!' });
+      } catch (err) {
+        throw new IncorrectValueError('Введены не коректные данные');
       }
-      console.log('user.id', user._id);
-      const token = jwt.sign(
-        {
-          _id: user._id,
-        },
-        secret.NODE_ENV === 'production'
-          ? secret.JWT_SECRET
-          : 'dev-secret',
-        {
-          expiresIn: '7d',
-        },
-      );
-      console.log(token);
-      return res.cookie(
-        'jwt',
-        token,
-        {
-          maxAge: 3600000,
-          httpOnly: true,
-          // sameSite: 'none',
-          // secure: true,
-        },
-      ).send({ message: 'Аутентификация прошла успешно!' });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
