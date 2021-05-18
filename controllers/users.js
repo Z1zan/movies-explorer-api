@@ -89,10 +89,6 @@ module.exports.createUser = (req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    throw new IncorrectValueError('Не заполнены все поля');
-  }
-
   User.findOne({ email }).select('+password')
     .then(async (user) => {
       if (!user) {
