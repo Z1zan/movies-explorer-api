@@ -9,6 +9,8 @@ const { createUser, login } = require('../controllers/users');
 
 const NotFoundError = require('../errors/notFoundError');
 
+router.get('/', auth);
+
 router.post(
   '/signin',
   celebrate({
