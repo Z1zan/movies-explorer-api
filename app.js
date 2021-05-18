@@ -10,7 +10,7 @@ const handleErrors = require('./middlewares/handleErrors');
 
 const { PORT = 3000 } = process.env;
 
-mongoose.connect(process.env.DB, {
+mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
