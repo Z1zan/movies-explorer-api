@@ -39,8 +39,9 @@ module.exports.createMovie = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Переданы некорректные данные при создании фильма.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -65,8 +66,9 @@ module.exports.deleteMovieById = (req, res, next) => {
         } catch (err) {
           throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
         }
+      } else {
+        throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
       }
-      throw new ForbiddenError('У вас нет доступа для удаления данной фильма');
     })
     .catch((err) => {
       if (err.name === 'CastError') {

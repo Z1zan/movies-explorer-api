@@ -23,8 +23,9 @@ module.exports.getUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Переданы некорректные данные при получении информации об пользователе.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -42,8 +43,9 @@ module.exports.updateUserInfo = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new NotFoundError('Переданы некорректные данные при обновлении аватара.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -74,15 +76,17 @@ module.exports.createUser = (req, res, next) => {
             next(new IncorrectValueError('Переданы некорректные данные при создании пользователя.'));
           } else if (err.name === 'MongoError' && err.code === 11000) {
             next(new ExistingMailError('Данный email уже используется'));
+          } else {
+            next(err);
           }
-          next(err);
         });
     })
     .catch((err) => {
       if (err.message.includes('Illegal arguments')) {
         next(new IncorrectValueError('Не введён пароль'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -127,8 +131,9 @@ module.exports.login = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectValueError('Введены не коректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
