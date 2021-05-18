@@ -71,7 +71,8 @@ module.exports.deleteMovieById = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new IncorrectValueError('Переданы некорректные данные для удаления фильма.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
