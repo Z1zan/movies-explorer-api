@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -21,6 +22,15 @@ mongoose.connect(process.env.NODE_ENV === 'production'
 });
 
 const app = express();
+
+app.use(cors({
+  origin: [
+    'https://biyele.nomoredomains.club',
+    'http://biyele.nomoredomains.club',
+    'http://localhost:3000',
+  ],
+  credentials: true,
+}));
 
 app.use(cookieParser());
 app.use(bodyParser.json());
